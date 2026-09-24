@@ -1,0 +1,418 @@
+{
+  "captured_at": "2026-09-24T21:39:51.611030+00:00",
+  "method": "closed-loop fixed concurrency; real ONNX CPU inference; no HTTP; per-case warmup excluded",
+  "hardware": {
+    "os": "macOS-26.5.2-arm64-arm-64bit",
+    "machine": "arm64",
+    "processor": "arm",
+    "logical_cpus": 10
+  },
+  "runtime": {
+    "python": "3.12.14",
+    "numpy": "2.5.3",
+    "onnxruntime": "1.30.0",
+    "scikit-learn": "1.9.1"
+  },
+  "configuration": {
+    "samples_per_run": 512,
+    "warmup_per_run": 64,
+    "repeats": 2,
+    "max_wait_ms": 8,
+    "queue_capacity_per_version": 128,
+    "timeout_ms": 2000,
+    "seed": 42
+  },
+  "model": {
+    "version": "digits-logreg-v1",
+    "title": "Scaled logistic regression",
+    "framework": "onnxruntime",
+    "accuracy": 0.9777777777777777,
+    "test_samples": 450,
+    "train_samples": 1347,
+    "sha256": "b084561cc4cf219b6349b1bf2d2f9b3df50601f3e6d53324c4f4f2eb17917e9c",
+    "artifact_bytes": 4428,
+    "created_at": "2026-09-24T21:37:43.390673+00:00",
+    "description": "StandardScaler and multinomial logistic regression; 64 grayscale pixel features."
+  },
+  "results": [
+    {
+      "version": "digits-logreg-v1",
+      "batch_size_limit": 1,
+      "concurrency": 1,
+      "repeat": 1,
+      "attempted": 512,
+      "successful": 512,
+      "errors": {},
+      "elapsed_seconds": 0.113319,
+      "successful_rps": 4518.228,
+      "attempted_rps": 4518.228,
+      "end_to_end_ms": {
+        "p50": 0.2182,
+        "p95": 0.2354,
+        "p99": 0.2692
+      },
+      "queue_ms": {
+        "p50": 0.031,
+        "p95": 0.035,
+        "p99": 0.0386
+      },
+      "inference_ms": {
+        "p50": 0.03,
+        "p95": 0.0336,
+        "p99": 0.0386
+      },
+      "mean_observed_batch_size": 1.0,
+      "batch_size_distribution": {
+        "1": 512
+      }
+    },
+    {
+      "version": "digits-logreg-v1",
+      "batch_size_limit": 1,
+      "concurrency": 1,
+      "repeat": 2,
+      "attempted": 512,
+      "successful": 512,
+      "errors": {},
+      "elapsed_seconds": 0.115068,
+      "successful_rps": 4449.528,
+      "attempted_rps": 4449.528,
+      "end_to_end_ms": {
+        "p50": 0.2195,
+        "p95": 0.2447,
+        "p99": 0.2973
+      },
+      "queue_ms": {
+        "p50": 0.0312,
+        "p95": 0.0361,
+        "p99": 0.0444
+      },
+      "inference_ms": {
+        "p50": 0.0304,
+        "p95": 0.0362,
+        "p99": 0.0435
+      },
+      "mean_observed_batch_size": 1.0,
+      "batch_size_distribution": {
+        "1": 512
+      }
+    },
+    {
+      "version": "digits-logreg-v1",
+      "batch_size_limit": 1,
+      "concurrency": 8,
+      "repeat": 1,
+      "attempted": 512,
+      "successful": 512,
+      "errors": {},
+      "elapsed_seconds": 0.087791,
+      "successful_rps": 5832.061,
+      "attempted_rps": 5832.061,
+      "end_to_end_ms": {
+        "p50": 1.3518,
+        "p95": 1.5402,
+        "p99": 1.6167
+      },
+      "queue_ms": {
+        "p50": 1.0392,
+        "p95": 1.2027,
+        "p99": 1.2727
+      },
+      "inference_ms": {
+        "p50": 0.0317,
+        "p95": 0.0407,
+        "p99": 0.0457
+      },
+      "mean_observed_batch_size": 1.0,
+      "batch_size_distribution": {
+        "1": 512
+      }
+    },
+    {
+      "version": "digits-logreg-v1",
+      "batch_size_limit": 1,
+      "concurrency": 8,
+      "repeat": 2,
+      "attempted": 512,
+      "successful": 512,
+      "errors": {},
+      "elapsed_seconds": 0.087989,
+      "successful_rps": 5818.904,
+      "attempted_rps": 5818.904,
+      "end_to_end_ms": {
+        "p50": 1.3556,
+        "p95": 1.5768,
+        "p99": 1.6305
+      },
+      "queue_ms": {
+        "p50": 1.0416,
+        "p95": 1.1682,
+        "p99": 1.2977
+      },
+      "inference_ms": {
+        "p50": 0.0319,
+        "p95": 0.0399,
+        "p99": 0.0441
+      },
+      "mean_observed_batch_size": 1.0,
+      "batch_size_distribution": {
+        "1": 512
+      }
+    },
+    {
+      "version": "digits-logreg-v1",
+      "batch_size_limit": 1,
+      "concurrency": 32,
+      "repeat": 1,
+      "attempted": 512,
+      "successful": 512,
+      "errors": {},
+      "elapsed_seconds": 0.089633,
+      "successful_rps": 5712.166,
+      "attempted_rps": 5712.166,
+      "end_to_end_ms": {
+        "p50": 5.5591,
+        "p95": 5.8404,
+        "p99": 5.8693
+      },
+      "queue_ms": {
+        "p50": 5.2311,
+        "p95": 5.5131,
+        "p99": 5.5489
+      },
+      "inference_ms": {
+        "p50": 0.0338,
+        "p95": 0.0427,
+        "p99": 0.0456
+      },
+      "mean_observed_batch_size": 1.0,
+      "batch_size_distribution": {
+        "1": 512
+      }
+    },
+    {
+      "version": "digits-logreg-v1",
+      "batch_size_limit": 1,
+      "concurrency": 32,
+      "repeat": 2,
+      "attempted": 512,
+      "successful": 512,
+      "errors": {},
+      "elapsed_seconds": 0.090688,
+      "successful_rps": 5645.702,
+      "attempted_rps": 5645.702,
+      "end_to_end_ms": {
+        "p50": 5.5724,
+        "p95": 5.9499,
+        "p99": 6.0662
+      },
+      "queue_ms": {
+        "p50": 5.2506,
+        "p95": 5.6257,
+        "p99": 5.7404
+      },
+      "inference_ms": {
+        "p50": 0.0347,
+        "p95": 0.0429,
+        "p99": 0.0477
+      },
+      "mean_observed_batch_size": 1.0,
+      "batch_size_distribution": {
+        "1": 512
+      }
+    },
+    {
+      "version": "digits-logreg-v1",
+      "batch_size_limit": 16,
+      "concurrency": 1,
+      "repeat": 1,
+      "attempted": 512,
+      "successful": 512,
+      "errors": {},
+      "elapsed_seconds": 5.436579,
+      "successful_rps": 94.177,
+      "attempted_rps": 94.177,
+      "end_to_end_ms": {
+        "p50": 10.7104,
+        "p95": 11.2753,
+        "p99": 11.5961
+      },
+      "queue_ms": {
+        "p50": 9.3179,
+        "p95": 9.5195,
+        "p99": 9.6162
+      },
+      "inference_ms": {
+        "p50": 0.4382,
+        "p95": 0.5996,
+        "p99": 0.7642
+      },
+      "mean_observed_batch_size": 1.0,
+      "batch_size_distribution": {
+        "1": 512
+      }
+    },
+    {
+      "version": "digits-logreg-v1",
+      "batch_size_limit": 16,
+      "concurrency": 1,
+      "repeat": 2,
+      "attempted": 512,
+      "successful": 512,
+      "errors": {},
+      "elapsed_seconds": 5.019908,
+      "successful_rps": 101.994,
+      "attempted_rps": 101.994,
+      "end_to_end_ms": {
+        "p50": 9.5351,
+        "p95": 10.9883,
+        "p99": 11.2922
+      },
+      "queue_ms": {
+        "p50": 9.1104,
+        "p95": 9.4263,
+        "p99": 9.6583
+      },
+      "inference_ms": {
+        "p50": 0.1088,
+        "p95": 0.5157,
+        "p99": 0.6984
+      },
+      "mean_observed_batch_size": 1.0,
+      "batch_size_distribution": {
+        "1": 512
+      }
+    },
+    {
+      "version": "digits-logreg-v1",
+      "batch_size_limit": 16,
+      "concurrency": 8,
+      "repeat": 1,
+      "attempted": 512,
+      "successful": 512,
+      "errors": {},
+      "elapsed_seconds": 0.600272,
+      "successful_rps": 852.947,
+      "attempted_rps": 852.947,
+      "end_to_end_ms": {
+        "p50": 9.3275,
+        "p95": 9.9143,
+        "p99": 10.4122
+      },
+      "queue_ms": {
+        "p50": 8.42,
+        "p95": 8.9897,
+        "p99": 9.0449
+      },
+      "inference_ms": {
+        "p50": 0.0882,
+        "p95": 0.2281,
+        "p99": 0.4059
+      },
+      "mean_observed_batch_size": 8.0,
+      "batch_size_distribution": {
+        "8": 512
+      }
+    },
+    {
+      "version": "digits-logreg-v1",
+      "batch_size_limit": 16,
+      "concurrency": 8,
+      "repeat": 2,
+      "attempted": 512,
+      "successful": 512,
+      "errors": {},
+      "elapsed_seconds": 0.602343,
+      "successful_rps": 850.014,
+      "attempted_rps": 850.014,
+      "end_to_end_ms": {
+        "p50": 9.3671,
+        "p95": 9.9307,
+        "p99": 10.3504
+      },
+      "queue_ms": {
+        "p50": 8.5115,
+        "p95": 9.028,
+        "p99": 9.0736
+      },
+      "inference_ms": {
+        "p50": 0.1016,
+        "p95": 0.2123,
+        "p99": 0.238
+      },
+      "mean_observed_batch_size": 8.0,
+      "batch_size_distribution": {
+        "8": 512
+      }
+    },
+    {
+      "version": "digits-logreg-v1",
+      "batch_size_limit": 16,
+      "concurrency": 32,
+      "repeat": 1,
+      "attempted": 512,
+      "successful": 512,
+      "errors": {},
+      "elapsed_seconds": 0.060358,
+      "successful_rps": 8482.743,
+      "attempted_rps": 8482.743,
+      "end_to_end_ms": {
+        "p50": 3.656,
+        "p95": 4.8529,
+        "p99": 5.2558
+      },
+      "queue_ms": {
+        "p50": 0.7888,
+        "p95": 1.6555,
+        "p99": 1.8499
+      },
+      "inference_ms": {
+        "p50": 0.0657,
+        "p95": 1.9135,
+        "p99": 3.1271
+      },
+      "mean_observed_batch_size": 16.0,
+      "batch_size_distribution": {
+        "16": 512
+      }
+    },
+    {
+      "version": "digits-logreg-v1",
+      "batch_size_limit": 16,
+      "concurrency": 32,
+      "repeat": 2,
+      "attempted": 512,
+      "successful": 512,
+      "errors": {},
+      "elapsed_seconds": 0.054915,
+      "successful_rps": 9323.472,
+      "attempted_rps": 9323.472,
+      "end_to_end_ms": {
+        "p50": 3.3838,
+        "p95": 3.6849,
+        "p99": 3.7773
+      },
+      "queue_ms": {
+        "p50": 0.7328,
+        "p95": 1.4834,
+        "p99": 1.5972
+      },
+      "inference_ms": {
+        "p50": 0.0697,
+        "p95": 1.6216,
+        "p99": 1.7747
+      },
+      "mean_observed_batch_size": 16.0,
+      "batch_size_distribution": {
+        "16": 512
+      }
+    }
+  ],
+  "limitations": [
+    "Single machine, process and model; no network or HTTP serialization.",
+    "Small CPU workload; this is not a GPU/LLM benchmark.",
+    "Closed-loop clients reduce offered load when latency rises; no open-loop saturation claim.",
+    "Percentiles include failed requests; queue/inference metrics include successes only.",
+    "Repeated sample vectors are intentional; inference results are not cached."
+  ]
+}

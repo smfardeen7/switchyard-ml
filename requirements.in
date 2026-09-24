@@ -1,0 +1,11 @@
+# Human-maintained direct dependencies. requirements.txt captures the tested environment.
+fastapi
+uvicorn
+httpx
+numpy
+scikit-learn
+onnxruntime
+skl2onnx
+prometheus-client
+pytest
+pytest-asyncio

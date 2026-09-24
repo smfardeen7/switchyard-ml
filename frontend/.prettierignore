@@ -1,0 +1,5 @@
+node_modules/
+dist/
+public/demo.json
+package-lock.json
+*.tsbuildinfo

@@ -1,0 +1,30 @@
+services:
+  api:
+    build: .
+    environment:
+      SWITCHYARD_ENV: demo
+      SWITCHYARD_API_KEY: ${SWITCHYARD_API_KEY:-local-development-only}
+    ports:
+      - "127.0.0.1:8090:8090"
+    volumes:
+      - switchyard-state:/app/state
+    restart: unless-stopped
+  console:
+    build: ./frontend
+    ports:
+      - "127.0.0.1:8080:80"
+    depends_on:
+      api:
+        condition: service_healthy
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    command: ["--config.file=/etc/prometheus/prometheus.yml", "--storage.tsdb.retention.time=2d"]
+    volumes:
+      - ./deploy/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "127.0.0.1:9090:9090"
+    depends_on:
+      api:
+        condition: service_healthy
+volumes:
+  switchyard-state:

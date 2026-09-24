@@ -1,0 +1,111 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: python -m pytest -q
+      - name: Real engine benchmark smoke
+        run: python scripts/benchmark.py --samples 24 --warmup 8 --repeats 1 --concurrency 1,8 --output /tmp/benchmark-smoke.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-smoke
+          path: /tmp/benchmark-smoke.json
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm run build
+
+  containers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install httpx==0.28.1
+      - name: Build and exercise full local deployment
+        shell: bash
+        run: |
+          set -euo pipefail
+          trap 'docker compose logs; docker compose down --volumes' EXIT
+          docker compose up --build --detach --wait --wait-timeout 180
+          curl --fail http://127.0.0.1:8080/ > /tmp/console.html
+          curl --fail http://127.0.0.1:8080/ready
+          curl --fail http://127.0.0.1:8090/metrics > /tmp/metrics.txt
+          python scripts/record_demo.py --output /tmp/container-recording.json
+          curl --fail http://127.0.0.1:9090/-/ready
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: container-experiment
+          path: |
+            /tmp/container-recording.json
+            /tmp/metrics.txt
+
+  pages:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: [backend, frontend, containers]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+        working-directory: frontend
+      - name: Verify the public recording is real and complete
+        run: |
+          node -e "const d = require('./frontend/public/demo.json'); if (d.frames.length < 3 || !d.frames.some(f => f.events.some(e => e.type === 'automatic_rollback')) || d.experiment.recovery_successes < 1) process.exit(1)"
+      - run: npm run build
+        working-directory: frontend
+        env:
+          VITE_DEMO_MODE: "1"
+          VITE_BASE_PATH: /${{ github.event.repository.name }}/
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: frontend/dist
+      - name: Publish recorded console
+        id: deployment
+        uses: actions/deploy-pages@v4
