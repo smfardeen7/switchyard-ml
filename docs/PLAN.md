@@ -13,9 +13,9 @@
 
 ## Tasks
 
-- [ ] Runtime: write failed model-integrity/shape tests; train/export deterministic ONNX versions; verify load/warmup and prediction parity; test corrupted files. Write concurrency/deadline/overload/shutdown tests before DynamicBatcher and verify them against actual inference.
-- [ ] Control plane: test SQLite optimistic revisions, quality gate, rollback and restart recovery; implement state/audit. Test metrics window/percentiles/exporter and stale-rollout isolation. Implement validated HTTP API, authentication, canary-only faults and guardrails.
-- [ ] Console: build accessible responsive React/TypeScript UI with model metadata, traffic allocation, percentiles, queue depth, audit timeline and sample inference; implement live mode and explicit recorded mode using CONTRACT.md.
-- [ ] Experiments: real engine benchmark at batch sizes1/16 and concurrency1/8/32, with warmup/denominators/runtime metadata; real HTTP degraded-canary/rollback/recovery scenario; generate recording from captured API state.
-- [ ] Operations: Docker/Compose/Prometheus and Kubernetes reference manifests, CI tests, container smoke, static Pages deployment. No unsupported scaling/throughput claims.
-- [ ] Independent review, all tests and browser workflow; fix actual defects; record measured results and limitations; publish repo and static console, verify CI and public page; add truthful resume bullets and interview walkthrough.
+- [x] Runtime: write failed model-integrity/shape tests; train/export deterministic ONNX versions; verify load/warmup and prediction parity; test corrupted files. Write concurrency/deadline/overload/shutdown tests before DynamicBatcher and verify them against actual inference.
+- [x] Control plane: test SQLite optimistic revisions, quality gate, rollback and restart recovery; implement state/audit. Test metrics window/percentiles/exporter and stale-rollout isolation. Implement validated HTTP API, authentication, canary-only faults and guardrails.
+- [x] Console: build accessible responsive React/TypeScript UI with model metadata, traffic allocation, percentiles, queue depth, audit timeline and sample inference; implement live mode and explicit recorded mode using CONTRACT.md.
+- [x] Experiments: real engine benchmark at batch sizes1/16 and concurrency1/8/32, with warmup/denominators/runtime metadata; real HTTP degraded-canary/rollback/recovery scenario; generate recording from captured API state.
+- [x] Operations: Docker/Compose/Prometheus and Kubernetes reference manifests, CI tests, container smoke, static Pages deployment. No unsupported scaling/throughput claims.
+- [x] Independent review, all tests and browser workflow; fix actual defects; record measured results and limitations; publish repo and static console, verify CI and public page; add truthful resume bullets and interview walkthrough.
