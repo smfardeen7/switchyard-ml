@@ -107,3 +107,19 @@ def test_stage_histograms_resolve_submillisecond_timings():
         ]
         assert 1 in finite, f"{name} cannot separate 0.2-0.3 ms from 2-3 ms"
 
+
+def test_timeseries_percentiles_are_computed_per_second():
+    t = Telemetry(clock=lambda: 100)
+    for latency in (1, 2, 3):
+        t.record(obs(at=90.2, latency=latency))
+    for latency in (40, 50):
+        t.record(obs(at=91.7, latency=latency, version="other"))
+    snap = t.snapshot({})
+    assert [(s["requests"], s["p95_ms"]) for s in snap["timeseries"]] == [
+        (3, 2.9),
+        (2, 49.5),
+    ]
+    assert {v["version"]: v["p50_ms"] for v in snap["by_version"]} == {
+        "candidate": 2,
+        "other": 45,
+    }
