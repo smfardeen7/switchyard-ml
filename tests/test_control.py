@@ -84,3 +84,23 @@ def test_failed_store_initialization_closes_connection(tmp_path, monkeypatch):
         PolicyStore(path, MODELS[1:])
     with pytest.raises(sqlite3.ProgrammingError, match="closed"):
         opened[0].execute("SELECT 1")
+
+
+def test_fresh_store_uses_first_registered_model_as_champion(tmp_path):
+    path = tmp_path / "state.db"
+    models = [
+        dict(version="mnist-cnn-v1", accuracy=0.99),
+        dict(version="mnist-cnn-v2", accuracy=0.99),
+    ]
+    store = PolicyStore(path, models)
+    assert store.get()["champion"] == "mnist-cnn-v1"
+    store.close()
+    # The default applies only to a new database; a persisted champion wins.
+    restarted = PolicyStore(path, models[::-1])
+    assert restarted.get()["champion"] == "mnist-cnn-v1"
+    restarted.close()
+
+
+def test_empty_registry_is_rejected(tmp_path):
+    with pytest.raises(InvalidRelease, match="empty"):
+        PolicyStore(tmp_path / "state.db", [])

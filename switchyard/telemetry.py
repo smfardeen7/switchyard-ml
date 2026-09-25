@@ -100,16 +100,37 @@ class Telemetry:
             buckets=(0.001, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2, 5),
             registry=self.registry,
         )
+        # Queue waits and CPU inference are often sub-millisecond; the client's
+        # default buckets start at 5 ms and would collapse them into one bucket.
+        stage_buckets = (
+            0.0001,
+            0.00025,
+            0.0005,
+            0.001,
+            0.0025,
+            0.005,
+            0.01,
+            0.025,
+            0.05,
+            0.1,
+            0.25,
+            0.5,
+            1,
+            2,
+            5,
+        )
         self.queue_latency = Histogram(
             "switchyard_queue_duration_seconds",
             "Queue wait for successful requests",
             ["version"],
+            buckets=stage_buckets,
             registry=self.registry,
         )
         self.inference_latency = Histogram(
             "switchyard_inference_duration_seconds",
             "Batch execution time for successful requests",
             ["version"],
+            buckets=stage_buckets,
             registry=self.registry,
         )
         self.depth = Gauge(
@@ -165,6 +186,12 @@ class Telemetry:
         for expired in [s for s in self.buckets if s < cutoff]:
             del self.buckets[expired]
         rows = list(self.observations)
+        # Group in one pass; rescanning every retained row for each version and
+        # each second costs ~600k comparisons per poll at full retention.
+        rows_by_version, rows_by_second = {}, {}
+        for r in rows:
+            rows_by_version.setdefault(r.version, []).append(r)
+            rows_by_second.setdefault(int(r.at), []).append(r)
         counts = {}
         for bucket in self.buckets.values():
             for version, value in bucket["versions"].items():
@@ -182,7 +209,7 @@ class Telemetry:
         )
         by_version = []
         for version, count in sorted(counts.items()):
-            vr = [r for r in rows if r.version == version]
+            vr = rows_by_version.get(version, [])
             success = [r for r in vr if not r.error]
             by_version.append(
                 dict(
@@ -197,7 +224,7 @@ class Telemetry:
             )
         series = []
         for second, bucket in sorted(self.buckets.items()):
-            br = [r for r in rows if int(r.at) == second]
+            br = rows_by_second.get(second, [])
             series.append(
                 dict(
                     at=bucket["at"],
