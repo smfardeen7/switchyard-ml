@@ -100,16 +100,37 @@ class Telemetry:
             buckets=(0.001, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2, 5),
             registry=self.registry,
         )
+        # Queue waits and CPU inference are often sub-millisecond; the client's
+        # default buckets start at 5 ms and would collapse them into one bucket.
+        stage_buckets = (
+            0.0001,
+            0.00025,
+            0.0005,
+            0.001,
+            0.0025,
+            0.005,
+            0.01,
+            0.025,
+            0.05,
+            0.1,
+            0.25,
+            0.5,
+            1,
+            2,
+            5,
+        )
         self.queue_latency = Histogram(
             "switchyard_queue_duration_seconds",
             "Queue wait for successful requests",
             ["version"],
+            buckets=stage_buckets,
             registry=self.registry,
         )
         self.inference_latency = Histogram(
             "switchyard_inference_duration_seconds",
             "Batch execution time for successful requests",
             ["version"],
+            buckets=stage_buckets,
             registry=self.registry,
         )
         self.depth = Gauge(

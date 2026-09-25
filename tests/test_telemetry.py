@@ -1,7 +1,16 @@
 from switchyard.telemetry import Telemetry, Observation, GuardrailMonitor
 
 
-def obs(revision=1, rollout="r1", version="candidate", error=False, latency=10, at=100):
+def obs(
+    revision=1,
+    rollout="r1",
+    version="candidate",
+    error=False,
+    latency=10,
+    at=100,
+    queue=2,
+    inference=1,
+):
     return Observation(
         at,
         "2026-09-24T00:00:00+00:00",
@@ -9,8 +18,8 @@ def obs(revision=1, rollout="r1", version="candidate", error=False, latency=10, 
         revision,
         rollout,
         latency,
-        2,
-        1,
+        queue,
+        inference,
         error,
         False,
     )
@@ -77,3 +86,24 @@ def test_console_rate_and_errors_are_not_capped_by_latency_sample_buffer():
     assert snap["by_version"][0]["errors"] == 5500
     assert snap["retention"]["latency_samples_truncated"] is True
     assert snap["retention"]["window_requests"] == 11000
+
+
+def test_stage_histograms_resolve_submillisecond_timings():
+    # ONNX inference for this workload takes about 0.1 ms. Prometheus' default
+    # buckets start at 5 ms, which would put every observation in one bucket.
+    t = Telemetry()
+    t.record(obs(queue=0.3, inference=0.2))
+    t.record(obs(queue=3, inference=2))
+    for name in (
+        "switchyard_queue_duration_seconds",
+        "switchyard_inference_duration_seconds",
+    ):
+        finite = [
+            sample.value
+            for metric in t.registry.collect()
+            if metric.name == name
+            for sample in metric.samples
+            if sample.name == f"{name}_bucket" and sample.labels["le"] != "+Inf"
+        ]
+        assert 1 in finite, f"{name} cannot separate 0.2-0.3 ms from 2-3 ms"
+
