@@ -36,8 +36,10 @@ def route_version(policy, key):
 
 class PolicyStore:
     def __init__(self, path: Path, models: list[dict]):
-        path.parent.mkdir(parents=True, exist_ok=True)
         self.models = {m["version"]: m for m in models}
+        if not self.models:
+            raise InvalidRelease("The verified model registry is empty")
+        path.parent.mkdir(parents=True, exist_ok=True)
         self.lock = RLock()
         self.db = sqlite3.connect(path, check_same_thread=False, isolation_level=None)
         try:
@@ -48,10 +50,11 @@ class PolicyStore:
             """)
             with self._transaction():
                 if not self.db.execute("SELECT 1 FROM policy WHERE id=1").fetchone():
+                    # A new deployment serves the first registered model.
                     self._save(
                         dict(
                             revision=0,
-                            champion="digits-logreg-v1",
+                            champion=next(iter(self.models)),
                             canary=None,
                             weight=0,
                             status="inactive",
