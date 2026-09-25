@@ -10,6 +10,10 @@ Switchyard is a working ML serving reference platform: real ONNX inference, boun
 
 The public console replays **measurements captured from the real API**. Live inference, load generation and release controls run locally. This is a single-instance systems project; it does not claim GPU/LLM serving performance or a distributed production control plane.
 
+![Switchyard recorded console showing the recovered champion after an observed canary rollback](docs/images/console.png)
+
+*Actual console screenshot of the recorded local HTTP experiment. The captured frame is read-only; run the platform locally to operate the serving and release controls.*
+
 ## Run the platform
 
 ```bash
